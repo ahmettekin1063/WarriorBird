@@ -1,20 +1,20 @@
 package com.ahmettekin.warriorbird;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Intersector;
+		import com.badlogic.gdx.ApplicationAdapter;
+		import com.badlogic.gdx.Gdx;
+		import com.badlogic.gdx.graphics.Color;
+		import com.badlogic.gdx.graphics.Texture;
+		import com.badlogic.gdx.graphics.g2d.BitmapFont;
+		import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+		import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+		import com.badlogic.gdx.math.Circle;
+		import com.badlogic.gdx.math.Intersector;
 
-import java.util.Random;
+		import java.util.Random;
 
 
 public class WarriorBird extends ApplicationAdapter {
-////////////////////////////////
+	////////////////////////////////
 	SpriteBatch batch;
 	Texture background;
 	Texture bird;
@@ -34,6 +34,9 @@ public class WarriorBird extends ApplicationAdapter {
 
 	int score =0;
 
+
+	int health =10;
+
 	int scoredEnemy=0;
 
 	Circle birdCircle;
@@ -46,32 +49,34 @@ public class WarriorBird extends ApplicationAdapter {
 	float [] enemyOffSet3 = new float[numberOfEnemies];
 
 
-    Circle[] enemyCircles;
-    Circle[] enemyCircles2;
-    Circle[] enemyCircles3;
+	Circle[] enemyCircles;
+	Circle[] enemyCircles2;
+	Circle[] enemyCircles3;
 
-    ShapeRenderer shapeRenderer;
+	ShapeRenderer shapeRenderer;
 	float distance =0;
-    float enemyVelocity = 20;
+	float enemyVelocity = 20;
 
-    BitmapFont font;
-    BitmapFont font2;
-///////////////////////////////////////////
+	BitmapFont font;
+	BitmapFont font2;
+
+	int hasarDurum;
+	///////////////////////////////////////////
 	@Override
 	public void create () {
 
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 		bird = new Texture("bird.png");
-        bee1 = new Texture("bee.png");
-        bee2 = new Texture("bee.png");
-        bee3 = new Texture("bee.png");
+		bee1 = new Texture("bee.png");
+		bee2 = new Texture("bee.png");
+		bee3 = new Texture("bee.png");
 
 
 
-        distance = Gdx.graphics.getWidth()/2;
+		distance = Gdx.graphics.getWidth()/2;
 
-        random = new Random();
+		random = new Random();
 
 		birdX = (Gdx.graphics.getWidth()/10)*3;
 		birdY = (Gdx.graphics.getHeight()/5)*2;
@@ -110,7 +115,7 @@ public class WarriorBird extends ApplicationAdapter {
 
 		}
 	}
-///////////////////////////////////
+	///////////////////////////////////
 	@Override
 	public void render () {
 
@@ -118,17 +123,33 @@ public class WarriorBird extends ApplicationAdapter {
 		batch.draw(background,0,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
 		if(gameState ==1){
-			//font2.dispose();
-
-			if (enemyX[scoredEnemy] <(Gdx.graphics.getWidth()/10)*3){
-	            score++;
 
 
-	            if(scoredEnemy<numberOfEnemies-1){
-	            	scoredEnemy++;
+			if (hasarDurum == 1 && enemyX[scoredEnemy]  <Gdx.graphics.getWidth() / 2-bird.getHeight() ) {
+				health--;
+				hasarDurum = 0;
+
+				if(scoredEnemy<numberOfEnemies-1){
+					scoredEnemy++;
 
 				}else{
-	            	scoredEnemy =0;
+					scoredEnemy =0;
+				}
+			}
+			if(health==0){
+				gameState =2;
+			}
+
+
+			if (hasarDurum == 0 && enemyX[scoredEnemy] <Gdx.graphics.getWidth() / 2 - bird.getHeight() /2){
+				score++;
+
+
+				if(scoredEnemy<numberOfEnemies-1){
+					scoredEnemy++;
+
+				}else{
+					scoredEnemy =0;
 				}
 			}
 			if(Gdx.input.justTouched()){
@@ -163,21 +184,22 @@ public class WarriorBird extends ApplicationAdapter {
 
 			}
 
-
-
-
-
-
-			if(birdY > 0 ){
+			if(birdY>0  ){
 
 				velocity = velocity +gravity;
 
 				birdY = birdY - velocity;
 
+				//System.out.println(birdY);
+				if(birdY<=0){
+					birdY =0.1f;
+				}
 
 			}
-			else{
-				gameState=2;
+			if(birdY >= Gdx.graphics.getHeight()-Gdx.graphics.getHeight() /10){
+
+				birdY = Gdx.graphics.getHeight()-Gdx.graphics.getHeight() /10;
+
 			}
 		}
 		else if(gameState ==0) {
@@ -186,10 +208,13 @@ public class WarriorBird extends ApplicationAdapter {
 			}
 		}
 
-		else if(gameState==2){
+		else if(gameState==2) {
+
+
+
 			font2.draw(batch,"oyun bitti!! ",300,Gdx.graphics.getHeight()/2);
 			if (Gdx.input.justTouched()) {
-				velocity = -50;
+
 				gameState = 1;
 
 				birdY = Gdx.graphics.getHeight()/2;
@@ -212,16 +237,17 @@ public class WarriorBird extends ApplicationAdapter {
 				velocity=0;
 				scoredEnemy=0;
 				score=0;
+				health =10;
 			}
 			}
-
-
-
 
 		batch.draw(bird , birdX, birdY, Gdx.graphics.getWidth() / 15, Gdx.graphics.getHeight() /10 );
 
 
 		font.draw(batch,"score: "+score,100,200);
+		font.draw(batch,"Health: "+health,400,200);
+		//font.draw(batch,"HasarDurum: "+hasarDurum,700,200);
+
 		batch.end();
 
 		birdCircle.set(birdX+Gdx.graphics.getWidth() / 30,birdY+Gdx.graphics.getHeight() /20,Gdx.graphics.getWidth()/30);
@@ -229,24 +255,24 @@ public class WarriorBird extends ApplicationAdapter {
 		//shapeRenderer.setColor(Color.BLACK);
 		//shapeRenderer.circle(birdCircle.x,birdCircle.y,birdCircle.radius);
 
+		for(int i =0; i<numberOfEnemies; i++){
+
+			//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
+			//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet2[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
+			//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet3[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
+
+			if(Intersector.overlaps(birdCircle,enemyCircles[i]) || Intersector.overlaps(birdCircle,enemyCircles2[i]) || Intersector.overlaps(birdCircle,enemyCircles3[i]))
+			{
+
+				System.out.println("collision detection");
+				//gameState = 2;
+				hasarDurum =1;
 
 
-	for(int i =0; i<numberOfEnemies; i++){
 
-		//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
-		//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet2[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
-		//shapeRenderer.circle(enemyX[i] + Gdx.graphics.getWidth()/30, Gdx.graphics.getHeight()/2+enemyOffSet3[i]+ Gdx.graphics.getHeight()/20,Gdx.graphics.getWidth()/30);
-
-        if(Intersector.overlaps(birdCircle,enemyCircles[i]) || Intersector.overlaps(birdCircle,enemyCircles2[i]) || Intersector.overlaps(birdCircle,enemyCircles3[i]))
-		{
-
-			System.out.println("collision detection");
-			gameState = 2;
+			}
 		}
-
-	}
 		//shapeRenderer.end();
-
 	}
 	//////////////////////////////
 	@Override
