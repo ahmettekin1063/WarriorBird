@@ -60,7 +60,7 @@ public class WarriorBird extends ApplicationAdapter {
 	BitmapFont font;
 	BitmapFont font2;
 
-	int hasarDurum;
+	boolean hasarDurum;
 	///////////////////////////////////////////
 	@Override
 	public void create () {
@@ -128,9 +128,9 @@ public class WarriorBird extends ApplicationAdapter {
 		if(gameState ==1){
 
 
-			if (hasarDurum == 1 && enemyX[scoredEnemy]  <Gdx.graphics.getWidth() / 2-bird.getHeight() ) {
+			if (hasarDurum == true && enemyX[scoredEnemy]  <= Gdx.graphics.getWidth() / 2-bird.getHeight() ) {
 				health--;
-				hasarDurum = 0;
+				hasarDurum = false;
 
 				if(scoredEnemy<numberOfEnemies-1){
 					scoredEnemy++;
@@ -144,7 +144,7 @@ public class WarriorBird extends ApplicationAdapter {
 			}
 
 
-			if (hasarDurum == 0 && enemyX[scoredEnemy] <Gdx.graphics.getWidth() / 2 - bird.getHeight() /2){
+			if (hasarDurum == false && enemyX[scoredEnemy] <Gdx.graphics.getWidth() / 2 - bird.getHeight() /2){
 				score++;
 
 
@@ -271,7 +271,7 @@ public class WarriorBird extends ApplicationAdapter {
 
 				System.out.println("collision detection");
 				//gameState = 2;
-				hasarDurum =1;
+				hasarDurum =true;
 
 
 
