@@ -91,11 +91,14 @@ public class WarriorBird extends ApplicationAdapter {
 
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
-		font.getData().setScale(4);
+		font.getData().setScale(5);
+		font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 		font2 = new BitmapFont();
 		font2.setColor(Color.WHITE);
 		font2.getData().setScale(6);
+		font2.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
 
 
 
@@ -212,6 +215,7 @@ public class WarriorBird extends ApplicationAdapter {
 
 
 
+
 			font2.draw(batch,"oyun bitti!! ",300,Gdx.graphics.getHeight()/2);
 			if (Gdx.input.justTouched()) {
 
@@ -242,6 +246,7 @@ public class WarriorBird extends ApplicationAdapter {
 			}
 
 		batch.draw(bird , birdX, birdY, Gdx.graphics.getWidth() / 15, Gdx.graphics.getHeight() /10 );
+
 
 
 		font.draw(batch,"score: "+score,100,200);
